@@ -35,6 +35,8 @@ void controlRobot(void) {
 */
 void observe(void);
 
+
+
 /**
  * 
 */
@@ -42,6 +44,8 @@ void think(Cell** maze, Robot robot, data??) {
     updateMazeValues(maze, robot, data??);
     maze = runFloodFill(maze);
 }
+
+
 
 /**
  * 
