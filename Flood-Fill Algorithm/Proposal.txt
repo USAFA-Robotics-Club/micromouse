@@ -1,0 +1,72 @@
+===========================================================================
+- CS210 FINAL PROJECT PROPOSAL, Fall 2022
+===========================================================================
+- Maze Running Simulation
+- Name: Victor Chen
+- Section: T 6/7
+- Documentation Statement:  None
+===========================================================================
+
+OVERVIEW:
+This is where you will write a brief description of your project.  You do not need to write a lot, but you do need to provide enough detail for your instructor to get a good understanding of what you would like to do.
+
+   For this project I will be implementing a maze running robot simulation,
+which will tie into running a program for the Micromouse competition. I will
+attempt to create a program that somehow gets through the maze simulation.
+
+INTERFACE MECHANISM:
+How will users interact with your program?  Is it with Curses, command line, etc?
+   I am trying to decide whether to use Curses or command lines to display the
+maze simulation. For now, both interfaces seem to be workable options.
+
+===========================================================================
+Required Programming Skills (must have 5 of 6):
+   -- Leave blank if you aren't planning on implementing.
+   1) Dynamic Memory Allocation
+	How are you going to meet this req:
+
+      I will attempt to create a dynamically created array of structs that contains
+   information of each walls and openings within each cell. This simulated robot may
+   also dynamically allocate memory as it runs through the maze.
+
+   2) Pointers
+	How are you going to meet this req:
+
+      I will use pointers to access cell information as the robot runs through the maze.
+
+   3) File I/O
+	How are you going to meet this req:
+
+      I will create files that will become the maze formats, so the program will need to 
+   initialize by reading in the maze file. Or I could probably use pointers with structs,
+   which may require file I/O.
+
+   4) Structs
+	How are you going to meet this req:
+
+      I will use structs to hold cell values (for if there is a wall or not) within the 
+   maze simulation.
+
+   5) String Manipulation
+	How are you going to meet this req:
+
+      If I do end up using file I/O, I may need to implement some sort of string 
+   manipulation on reading the maze format file.
+
+   6) Processing of Array Data
+	How are you going to meet this req:
+
+      I will need to process the data from the array of structs I will create from the
+   maze file. This array data will be read and processed as the robot runs through
+   the maze.
+
+Required Advanced Programming Skills (1 of the below):
+   -- Leave blank if you aren't planning on implementing.
+   1) Recursion
+	How are you going to meet this req:
+
+   2) 2D Dynamic Memory
+	How are you going to meet this req:
+
+      I will implement a 2D dynamic array that is created to hold a struct value of
+   what is contained within the cell (the walls)
