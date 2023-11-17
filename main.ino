@@ -1,5 +1,5 @@
 /*
-  This is the main file for the ECE Robot Club MicroMouse robot!
+  This is the main file for the ECE Robot Club MicroMouse robot
 */
 
 // Includes
