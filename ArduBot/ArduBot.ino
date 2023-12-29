@@ -1,10 +1,16 @@
-// ArduBot.ino
-// Stan Baek
-// Dec 3, 2023
+/**
+ * @file      ArduBot.ino
+ * @brief     Top-level functions controlling two DC motors.
+ * @details   Runs on an Arduino board for Arduino Motor Shield (https://docs.arduino.cc/hardware/motor-shield-rev3).
+ * @author    Stan Baek
+ * @affiliation United States Air Force Academy
+ * @date      December 3, 2023
+ */
+
 
 /* 
 Simplified BSD License (FreeBSD License)
-Copyright (c) 2019, Jonathan Valvano, All rights reserved.
+Copyright (c) 2023, Stanley S. Baek, All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:

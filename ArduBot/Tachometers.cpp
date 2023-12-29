@@ -1,12 +1,16 @@
-// Tachometers.c
-// Provide mid-level functions that measure the speeds and displancements of
-// two DFRobot FIT0458 DC motors.
-// Stan Baek
-// Dec 3, 2023
+/**
+ * @file      Tachometers.cpp
+ * @brief     Measuring the speeds and displacements of two DC motors.
+ * @details   Runs on an Arduino board for the motors on Texas Instruments Robotics System Learning Kit MAX (TI-RSLK MAX) -  https://www.pololu.com/product/3670.
+ * @details   Runs on Arduino Due for two DFRobot FIT0458 DC motors. https://wiki.dfrobot.com/Micro_DC_Motor_with_Encoder-SJ02_SKU__FIT0458.
+ * @author    Stan Baek
+ * @affiliation United States Air Force Academy
+ * @date      October 7, 2023
+ */
 
 /* 
 Simplified BSD License (FreeBSD License)
-Copyright (c) 2019, Jonathan Valvano, All rights reserved.
+Copyright (c) 2023, Stanley S. Baek, All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
@@ -34,20 +38,20 @@ policies, either expressed or implied, of the FreeBSD Project.
 */
 
 #include <Arduino.h>
-// #include "Tachometers.h"
 
-#define DEFAULT_PERIOD2RPM  62500   // revolutions per second
-#define DEFAULT_PERIOD2DPS  375000  // revolutions per degree
-#define RSLK_PERIOD2DPS     1000000 // degrees per second
+#define DEFAULT_PERIOD2RPM  62500   // conversion factor: period in us to rev/min
+#define DEFAULT_PERIOD2DPS  375000  // conversion factor: period in us to deg/sec
+#define RSLK_PERIOD2DPS     1000000 // conversion factor: period in us to deg/sec
 
-#define RPM2DPS     60  // 1 revolution per minute = 60 degrees per second.
+// Conversion factor: 1 revolution per minute = 60 degrees per second.
+#define RPM2DPS     60  
 
 // Define the minimum tachometer period.
 // At 6V, the maximum unloaded motor speed is 160 RPM,
 // which corresponds to approximately 400 microseconds.
 // For sensor debouncing, we can ignore tachometer 
-// rising/falling edges that occur within a quarter of 400 microseconds.
-#define MIN_TACHO_PERIOD 200    
+// rising/falling edges that occur within a half of 400 microseconds.
+#define MIN_TACHO_PERIOD 200     
 
 static char LeftEncoderAPin_;
 static char LeftEncoderBPin_;
@@ -79,7 +83,7 @@ void updateLeftEncoder();
 void updateRightEncoder();
 
 /**
- * Initialize Tachometers
+ * This function initializes the tachometers, sets the appropriate pins as inputs with pull-up resistors, and attaches interrupts for updating encoder counts.
  */
 void Tacho_Init(char leftEncoderAPin, char leftEncoderBPin, char rightEncoderAPin, char rightEncoderBPin) {
   
@@ -114,7 +118,7 @@ void Tacho_Init(char leftEncoderAPin, char leftEncoderBPin, char rightEncoderAPi
 }
 
 /**
- * Initialize Tachometers with the default pins
+ * This function initializes the tachometers with default pins for the left and right motors.
  */
 void Tacho_InitDefault(void) {
 
@@ -128,7 +132,7 @@ void Tacho_InitDefault(void) {
 }
 
 /**
- * Initialize Tachometers for the RLSK
+ * Initialize Tachometers for TI-RLSK with the default pins
  */
 void Tacho_InitRLSK(void) {
 
@@ -151,35 +155,50 @@ void Tacho_InitRLSK(void) {
 
 }
 
+
+/**
+ * Retrieve the current periods of the left and right tachometers.
+ */
 void Tacho_GetPeriods(uint32_t* leftPeriod_us, uint32_t* rightPeriod_us) {
     *leftPeriod_us = LeftTimeInterval_us_;
     *rightPeriod_us = RightTimeInterval_us_;
 }
 
+/**
+ * Get Tachometer Speeds in RPM
+ */
 void Tacho_GetSpeedsRPM(uint16_t* leftSpeed_rpm, uint16_t* rightSpeed_rpm) {
    
    *leftSpeed_rpm = LeftSpeed_dps_/RPM2DPS;
    *rightSpeed_rpm = RightSpeed_dps_/RPM2DPS;
 }
 
+/**
+ * Get Tachometer Speeds in DPS
+ */
 void Tacho_GetSpeeds(uint16_t* leftSpeed_dps, uint16_t* rightSpeed_dps) {
    *leftSpeed_dps = LeftSpeed_dps_;
    *rightSpeed_dps = RightSpeed_dps_;
 }
 
+/**
+ * Get Tachometer Steps
+ */
 void Tacho_GetSteps(int32_t* leftEncoderSteps, int32_t* rightEncoderSteps) {   
    *leftEncoderSteps = LeftEncoderSteps_;
    *rightEncoderSteps = RightEncoderSteps_;
 }
 
 
-// ------------ average ------------
-// Simple math function that calculates the average
-// value of the data array.
-// Input: data is an array of 16-bit unsigned numbers
-//        data_length is the number of elements in data
-// Output: the average value of the data
-// Note: Overflow is not considered.
+/**
+ * @brief Calculate Average
+ *
+ * Calculates the average value of the LeftSpeedBuffer array.
+ *
+ * @param data  a 16-bit unsigned numbers.
+ * @return The average value of the LeftSpeedBuffer array
+ *
+ */
 uint32_t left_average(uint32_t data) {
     
     static uint8_t index = 0;
@@ -193,6 +212,15 @@ uint32_t left_average(uint32_t data) {
     return sum/TACHBUFF_SIZE;
 }
 
+/**
+ * @brief Calculate Average
+ *
+ * Calculates the average value of the RightSpeedBuffer array.
+ *
+ * @param data  a 16-bit unsigned numbers.
+ * @return The average value of the RightSpeedBuffer array
+ *
+ */
 uint32_t right_average(uint32_t data) {
     
     static uint8_t index = 0;
@@ -207,7 +235,13 @@ uint32_t right_average(uint32_t data) {
 }
 
 
-// Interrupt service routine to update encoder position
+/**
+ * @brief Interrupt Service Routine to Update Left Encoder Position and Speed
+ *
+ * This ISR updates the left encoder position and speed based on state changes.
+ *
+ * Note: This ISR is designed for use with the Arduino platform.
+ */
 void updateLeftEncoder() {
 
     // Record the time of the interrupt
@@ -242,6 +276,13 @@ void updateLeftEncoder() {
 
 }
 
+/**
+ * @brief Interrupt Service Routine to Update Right Encoder Position and Speed
+ *
+ * This ISR updates the right encoder position and speed based on state changes.
+ *
+ * Note: This ISR is designed for use with the Arduino platform.
+ */
 void updateRightEncoder(){
 
     // Record the time of the interrupt

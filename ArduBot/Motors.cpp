@@ -1,12 +1,15 @@
-// Motors.c
-// Runs on Arduino Motor Shield (https://docs.arduino.cc/hardware/motor-shield-rev3)
-// Provide mid-level functions that control two DC motors
-// Stan Baek
-// October 7, 2023
+/**
+ * @file      Motors.cpp
+ * @brief     Mid-level functions controlling two DC motors.
+ * @details   Runs on an Arduino board for Arduino Motor Shield (https://docs.arduino.cc/hardware/motor-shield-rev3).
+ * @author    Stan Baek
+ * @affiliation United States Air Force Academy
+ * @date      October 7, 2023
+ */
 
 /* 
 Simplified BSD License (FreeBSD License)
-Copyright (c) 2019, Jonathan Valvano, All rights reserved.
+Copyright (c) 2023, Stanley S. Baek, All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
@@ -37,24 +40,23 @@ policies, either expressed or implied, of the FreeBSD Project.
 #include "Motors.h"
 
 
-
-
 #define MAX_DUTY_CYCLE  1000
 
 /**
- * Constructor
- * Initialize pins for the Arduino Motor Shield Rev3, 
+ * @brief Constructor for Motors class
+ *
+ * Initialize pins for the Arduino Motor Shield Rev3.
  * https://store-usa.arduino.cc/products/arduino-motor-shield-rev3?selectedStore=us
- * 
- * This constructor uses the following pins: 
- * Left motor direction connected to Pin 12
- * Left motor PWM connected to Pin 3
- * Left motor brake connected to Pin 9
- * Left motor SNS (current sensing) connected to A0
- * Right motor direction connected to Pin 13
- * Right motor PWM connected to Pin 11
- * Right motor enable connected to Pin 8
- * Right motor SNS (current sensing) connected to A1 
+ *
+ * This constructor uses the following pins:
+ * - Left motor direction connected to Pin 12
+ * - Left motor PWM connected to Pin 3
+ * - Left motor brake connected to Pin 9
+ * - Left motor SNS (current sensing) connected to A0
+ * - Right motor direction connected to Pin 13
+ * - Right motor PWM connected to Pin 11
+ * - Right motor enable connected to Pin 8
+ * - Right motor SNS (current sensing) connected to A1
  */
 Motors::Motors(void) {        
     
@@ -80,9 +82,9 @@ Motors::Motors(void) {
 
 
 /**
- * Constructor
- * Initialize pins with the given arguments for the Arduino Motor Shield Rev3, 
- * https://store-usa.arduino.cc/products/arduino-motor-shield-rev3?selectedStore=us
+ * @brief Constructor
+ *
+ * Initialize pins with the given arguments for the Arduino Motor Shield Rev3.
  */
 Motors::Motors(char pwmL_pin, char pwmR_pin, char dirL_pin, char dirR_pin, char brakeL_pin, char brakeR_pin, char snsL_pin, char snsR_pin) {
   
@@ -103,13 +105,13 @@ Motors::Motors(char pwmL_pin, char pwmR_pin, char dirL_pin, char dirR_pin, char 
     pinMode(BrakeR, OUTPUT);
 }
 
+/* trivial destructor */
+Motors::~Motors() {
+}
+
+
 /**
- * forward
- * Drive the robot forward by running left and
- * right wheels forward with the given duty cycles.
- * Input: left_duty_permille  duty cycle of left wheel (0 to 1000)
- *        rightDuty_permyriad duty cycle of right wheel (0 to 1000)
- * Output: none
+ * Drive the robot forward by running left and right wheels forward with the given duty cycles.
 */
 void Motors::forward(uint16_t left_duty_permille, uint16_t right_duty_permille) {
   
@@ -126,12 +128,7 @@ void Motors::forward(uint16_t left_duty_permille, uint16_t right_duty_permille) 
 }
 
 /**
- * backward
- * Drive the robot backward by running left and
- * right wheels backward with the given duty cycles.
- * Input: left_duty_permille  duty cycle of left wheel (0 to 1000)
- *        rightDuty_permyriad duty cycle of right wheel (0 to 1000)
- * Output: none
+ * Drive the robot backward by running left and right wheels backward with the given duty cycles.
 */
 void Motors::backward(uint16_t left_duty_permille, uint16_t right_duty_permille) {
 
@@ -148,12 +145,7 @@ void Motors::backward(uint16_t left_duty_permille, uint16_t right_duty_permille)
 }
 
 /**
- * turn_left
- * Turn the robot to the left by running the left wheel backward
- * and the right wheel forward with the given duty cycles.
- * Input: left_duty_permille  duty cycle of left wheel (0 to 1000)
- *        rightDuty_permyriad duty cycle of right wheel (0 to 1000)
- * Output: none
+ * Make the robot turn to the left by moving the left wheel backward and the right wheel forward based on the provided duty cycles.
 */
 void Motors::turn_left(uint16_t left_duty_permille, uint16_t right_duty_permille) {
 
@@ -170,12 +162,7 @@ void Motors::turn_left(uint16_t left_duty_permille, uint16_t right_duty_permille
 }
 
 /**
- * turn_right
- * Turn the robot to the right by running the left wheel forward
- * and the right wheel backward with the given duty cycles.
- * Input: left_duty_permille  duty cycle of left wheel (0 to 1000)
- *        rightDuty_permyriad duty cycle of right wheel (0 to 1000)
- * Output: none
+ * Make the robot turn to the right by moving the left wheel forward and the right wheel backward based on the provided duty cycles.
 */
 void Motors::turn_right(uint16_t left_duty_permille, uint16_t right_duty_permille) {
 
@@ -192,10 +179,7 @@ void Motors::turn_right(uint16_t left_duty_permille, uint16_t right_duty_permill
 }
 
 /**
- * coast
- * Set the PWM speed control to 0% duty cycle.
- * Input: none
- * Output: none
+ * Bring the robot to a coasting state by setting the PWM speed control to a 0% duty cycle.
 */
 void Motors::coast(void) {
   
@@ -206,10 +190,7 @@ void Motors::coast(void) {
 }
 
 /**
- * brake
- * Stop the motors
- * Input: none
- * Output: none
+ * Bring the robot to a stop by deactivating the motors.
 */
 void Motors::brake(void) {
   
@@ -217,6 +198,3 @@ void Motors::brake(void) {
     digitalWrite(BrakeL, HIGH);  // brake 
 }
 
-/* trivial destructor */
-Motors::~Motors() {
-}

@@ -85,7 +85,7 @@ void setup() {
     Serial.begin(115200);
     Serial.println("Starting...");
 
-    // Initialize I2C bus.
+    // Initialize an I2C bus for two sensors.
     Wire.begin();
     Left.begin();        
     Left.VL53L4CX_Off();
@@ -97,44 +97,12 @@ void setup() {
     Right.InitSensor(0x62);
     Right.VL53L4CX_StartMeasurement();
 
+    // Initialize another I2C bus for the third sensor
     Wire1.begin();
     Center.begin();        
     Center.VL53L4CX_Off();
     Center.InitSensor(0x42);
     Center.VL53L4CX_StartMeasurement();
-
-
-
-
-    //TofLeft.VL53L4CX_Off();
-
-    //Initialize VL53L4CX satellite component.
-    // error = TofCenter.InitSensor(TOF_CENTER_ADDRESS);
-    // if(error) {
-    //     Serial.print(F("Failed to set the center ToF address"));
-    //     while(1);
-    // } 
-    // Serial.println(F("Center ToF sensor has initialized."));
-
-
-    // TofCenter.VL53L4CX_On();
-    // delay(10);
-    // error = TofCenter.VL53L4CX_StartMeasurement();
-    // if(error) {
-    //     Serial.print(F("Failed to start Center measurement"));
-    //     //while(1);
-    // }
-    // Serial.println(F("Center ToF sensors have started measurements."));
-
-    // TofRight.VL53L4CX_On();
-    // delay(10);
-    // error = TofRight.VL53L4CX_StartMeasurement();
-    // if(error) {
-    //     Serial.print(F("Failed to start Right measurement"));
-    //     while(1);
-    // } 
-    // Serial.println(F("Right ToF sensors have started measurements."));
-
 }
 
 void loop() {
